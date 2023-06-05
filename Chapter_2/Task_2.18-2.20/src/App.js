@@ -1,22 +1,21 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import noteService from './services/notes'
 
 const App = (props) => {
-  const [persons, setNotes] = useState([])
+  const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState()
   const [newFilter, setNewFilter] = useState()
   const [newNumber, setNewNumber] = useState()
-  const result = persons.map(note => note.name)
+  const result = notes.map(note => note.name)
   const [errorMessage, setErrorMessage] = useState('some error happened...')
 
   const toggleImportanceOf = id => {
-    const note = persons.find(n => n.id === id)
+    const note = notes.find(n => n.id === id)
     const changedNote = { ...note, important: !note.important }
 
     noteService
       .update(id, changedNote).then(returnedNote => {
-        setNotes(persons.map(note => note.id !== id ? note : returnedNote))
+        setNotes(notes.map(note => note.id !== id ? note : returnedNote))
       })
       .catch(error => {
         setErrorMessage(
@@ -25,7 +24,7 @@ const App = (props) => {
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
-        setNotes(persons.filter(n => n.id !== id))
+        setNotes(notes.filter(n => n.id !== id))
       })
   }
 
@@ -44,7 +43,7 @@ const App = (props) => {
       noteService
       .create(noteObject)
       .then(returnedNote => {
-        setNotes(persons.concat(returnedNote))
+        setNotes(notes.concat(returnedNote))
         setNewNote('')
         setNewNumber('')
       })
@@ -86,8 +85,8 @@ const App = (props) => {
     .then(() => {
       noteService
       .getAll()
-      .then(returnedPersons => {
-        setNotes(returnedPersons)
+      .then(returnedNotes => {
+        setNotes(returnedNotes)
       })
     })
     setErrorMessage(
@@ -135,7 +134,7 @@ const App = (props) => {
       </form>
       <h1>Numbers</h1>
       <Notification message={errorMessage} />
-      {persons.filter(note => note.name.includes(document.getElementById("filterText").value)).map(note =>
+      {notes.filter(note => note.name.includes(document.getElementById("filterText").value)).map(note =>
        <Note key={note.id} name={note.name} number={note.number} id={note.id} toggleImportance={() => toggleImportanceOf(note.id)}/>
       )}
     </div>

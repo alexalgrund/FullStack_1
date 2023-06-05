@@ -1,10 +1,5 @@
 {
-  "persons": [
-    {
-      "name": "Mikael",
-      "number": "070-652911",
-      "id": 2
-    },
+  "notes": [
     {
       "name": "Joonatan",
       "number": "020-434112",
